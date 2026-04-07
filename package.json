@@ -12,6 +12,7 @@
     "kysely-d1": "^0.4.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260405.1",
     "@prisma/extension-accelerate": "^3.0.1",
     "prisma": "^7.6.0",
     "wrangler": "^4.4.0"
