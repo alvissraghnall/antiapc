@@ -29,13 +29,14 @@
   //     "bucket_name": "my-bucket"
   //   }
   // ],
-  // "d1_databases": [
-  //   {
-  //     "binding": "MY_DB",
-  //     "database_name": "my-database",
-  //     "database_id": ""
-  //   }
-  // ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "antiapc",
+      "database_id": "51e5da16-efe0-4e65-9a2d-6b92879329c8",
+      "migrations_dir": "migrations"
+    }
+  ],
   // "ai": {
   //   "binding": "AI"
   // },

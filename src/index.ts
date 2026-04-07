@@ -1,10 +1,15 @@
 import { Hono } from 'hono'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { logger } from 'hono/logger'
+import { CloudflareBindings, createDbRouter, HonoEnv } from './db'
 
-const app = new Hono()
+const app = new Hono<HonoEnv>()
 
 app.use(logger())
+
+// Mount database router
+const dbRouter = createDbRouter()
+app.route('/', dbRouter)
 
 app.get('/star', (c) => {
   return c.text('Hello Hono!')
