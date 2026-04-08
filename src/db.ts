@@ -5,6 +5,11 @@ import { D1Dialect } from 'kysely-d1';
 
 export interface CloudflareBindings {
   DB: D1Database;
+  SMTP_HOST?: string;
+  SMTP_PORT?: string;
+  SMTP_USER?: string;
+  SMTP_PASS?: string;
+  FROM_EMAIL?: string;
 }
 
 interface ReasonsTable {
@@ -178,6 +183,16 @@ export const createDbRouter = () => {
     });
 
     const now = new Date().toISOString();
+
+    const existingReason = await db
+      .selectFrom('reasons')
+      .select('id')
+      .where('text', '=', text)
+      .executeTakeFirst();
+
+    if (existingReason) {
+      return c.json({ message: 'A reason with this text already exists', id: existingReason.id }, 409);
+    }
 
     const result = await db
       .insertInto('reasons')

@@ -123,7 +123,7 @@ export const REASONS_PART1 = [
     "cat": "GOVERNANCE",
     "text": "Legal scholars argued the tax bills violated Section 59 of the 1999 Constitution, which prescribes specific procedures for money bills that were allegedly bypassed",
     "source": "The Nigeria Lawyer",
-    "url": "#"
+    "url": "https://placng.org/Legist/alleged-alteration-of-the-tax-reform-act-raises-serious-constitutional-concerns/"
   },
   {
     "id": 871,
@@ -137,7 +137,7 @@ export const REASONS_PART1 = [
     "cat": "GOVERNANCE",
     "text": "Civil society groups filed suit at the Federal High Court challenging the constitutionality of the doctored tax bills, but the case has been repeatedly adjourned",
     "source": "ICIR Nigeria",
-    "url": "#"
+    "url": "https://www.arise.tv/serap-sues-ccb-over-failure-to-probe-alleged-electoral-tax-law-alterations/"
   },
   {
     "id": 873,
@@ -163,16 +163,16 @@ export const REASONS_PART1 = [
   {
     "id": 876,
     "cat": "GOVERNANCE",
-    "text": "The Senate President was accused of fast-tracking the tax bills to please the executive, bypassing the mandatory 30-day public hearing period for major fiscal legislation",
+    "text": "The Senate President was accused of fast-tracking bills to please the executive.",
     "source": "The Nigeria Lawyer",
-    "url": "#"
+    "url": "https://thestreetjournal.org/oshiomhole-laments-senates-fast-tracking-of-bills-says-chamber-becoming-rubber-stamp/"
   },
   {
     "id": 877,
     "cat": "ECONOMY",
     "text": "Real estate transaction taxes were increased under the reform, adding costs to an already unaffordable housing market where the deficit exceeds 28 million units",
     "source": "Financial Nigeria",
-    "url": "#"
+    "url": "https://angle360ng.com/real-estate-reform-may-be-fueling-a-housing-squeeze/"
   },
   {
     "id": 878,

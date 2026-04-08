@@ -11,9 +11,10 @@
     "port": 9876, 
     // "local_protocol": "http",
   },
-  // "compatibility_flags": [
-  //   "nodejs_compat"
-  // ],
+  "compatibility_flags": [
+    "nodejs_compat",
+    "nodejs_compat_populate_process_env"
+  ],
   // "vars": {
   //   "MY_VAR": "my-variable"
   // },

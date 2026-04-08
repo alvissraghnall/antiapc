@@ -4,7 +4,7 @@ import {
   REASONS_PART3,
   REASONS_PART4,
   REASONS
-} from '../src/raw'; // NOTE: Update to '../src/data' if you change your import structure later
+} from '../src/data'; // NOTE: Update to '../src/data' if you change your import structure later
 
 const allData = [
   ...REASONS,

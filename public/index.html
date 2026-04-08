@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>Reject the APC, and all its works</title>
+  <title>1000 Reasons - Never Forget Why</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap"
     rel="stylesheet" />
@@ -102,17 +102,67 @@
     body {
       min-height: max(884px, 100dvh);
     }
+
+    #theme-toggle {
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    #theme-toggle:hover {
+      transform: rotate(15deg) scale(1.1);
+    }
+
+    .dark #sun-icon {
+      display: block;
+    }
+
+    .dark #moon-icon {
+      display: none;
+    }
+
+    #sun-icon {
+      display: none;
+    }
+
+    #moon-icon {
+      display: block;
+    }
   </style>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
 </head>
 
-<body class="bg-surface text-on-surface selection:bg-primary-container selection:text-white">
+<body class="bg-surface text-on-surface selection:bg-primary-container selection:text-white dark:bg-[#121212] dark:text-[#fcf8f9]">
   <!-- TopAppBar -->
   <header class="bg-[#fcf8f9] dark:bg-[#1b1b1c] fixed top-0 z-50 w-full backdrop-blur-xl bg-opacity-80">
     <div class="flex justify-between items-center w-full px-6 py-4">
       <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-[#003ec7] dark:text-[#0052ff]" data-icon="gavel">gavel</span>
-        <h1 class="text-xl font-black text-center text-[#1b1b1c] dark:text-[#fcf8f9] uppercase tracking-tighter">anti-apc crooner</h1>
+        <h1 class="text-xl font-black flex items-baseline gap-2 text-center text-[#1b1b1c] dark:text-[#fcf8f9] uppercase tracking-tighter">
+          1000 REASONS <span class="text-[10px] font-bold tracking-widest opacity-50 rounded border border-current px-1.5 py-0.5 md:inline-block hidden">UNOFFICIAL</span></h1>
       </div>
+      <button id="theme-toggle" onclick="toggleTheme()"
+        class="p-2 rounded-full hover:bg-surface-container-highest dark:hover:bg-inverse-surface transition-colors flex items-center justify-center">
+        <span id="moon-icon" class="material-symbols-outlined dark:text-inverse-on-surface text-on-surface">dark_mode</span>
+        <span id="sun-icon" class="material-symbols-outlined dark:text-inverse-on-surface text-on-surface">light_mode</span>
+      </button>
     </div>
   </header>
   <main class="pt-24 pb-32">
@@ -120,90 +170,85 @@
     <section class="px-6 md:px-12 lg:px-24 mb-32">
       <div class="editorial-grid gap-y-12">
         <div class="col-span-12 lg:col-span-11">
-          <span class="inline-block text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-primary mb-6">URGENT
-            BRIEFING</span>
+          <span class="inline-block text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-primary dark:text-[#95aafe] mb-6">NEVER FORGET</span>
           <h2 class="text-6xl md:text-7xl lg:text-8xl font-extrabold leading-[0.9] tracking-tighter mb-8 uppercase">
-            TRUTH OVER FICTION.
+            1000 REASONS.<br/>DIRECT TO YOUR INBOX.
           </h2>
         </div>
         <div class="col-span-12 lg:col-start-4 lg:col-span-7">
-          <p class="text-xl md:text-2xl leading-relaxed font-medium mb-12 text-on-surface">
-            A scheduled reminder to resist the propaganda. We dismantle the architectural lies built to obscure the
-            political reality.
+          <p class="text-xl md:text-2xl leading-relaxed font-medium mb-12 text-on-surface dark:text-[#dcd9da]">
+            Subscribe to get random, "svelte" reminders of the administration's verified failures delivered to your inbox 3 times a week. Don't let them rewrite history.
+            <span class="block mt-4 text-sm font-normal opacity-60">
+              <strong>Disclaimer:</strong> This is an independent mailing list. We are <strong>not affiliated</strong> with the original creators of the 1000 Reasons project; we just use their public data to keep you informed.
+            </span>
           </p>
-          <!-- Subscription Feature -->
-          <div
-            class="flex flex-col md:flex-row gap-0 border-b-2 border-on-surface focus-within:border-primary transition-colors">
-            <input
-              class="bg-transparent border-none focus:ring-0 w-full py-6 px-0 text-sm font-bold uppercase tracking-widest placeholder:text-outline"
-              placeholder="ENTER YOUR EMAIL FOR COUNTER-NARRATIVES" type="email" />
-            <button
-              class="bg-primary text-on-primary px-12 py-6 font-bold uppercase tracking-widest hover:bg-primary-container active:scale-95 transition-all">
+          <form id="subscribe-form" method="POST" action="/register"
+            class="flex flex-col md:flex-row gap-0 border-b-2 border-on-surface dark:border-[#dcd9da] focus-within:border-primary dark:focus-within:border-[#95aafe] transition-colors">
+            <input name="email" required
+              class="bg-transparent border-none focus:ring-0 w-full py-6 px-0 text-sm font-bold uppercase tracking-widest placeholder:text-outline dark:placeholder:text-[#737688] dark:text-[#fcf8f9]"
+              placeholder="ENTER YOUR EMAIL TO GET REMINDERS" type="email" />
+            <button type="submit" id="submit-btn"
+              class="bg-primary dark:bg-[#0052ff] text-on-primary px-12 py-6 font-bold uppercase tracking-widest hover:bg-primary-container dark:hover:bg-[#4459a8] active:scale-95 transition-all whitespace-nowrap">
               SUBSCRIBE
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </section>
     <!-- The Void Break -->
-    <div class="h-64 bg-surface-container-low flex items-center px-6 md:px-12 lg:px-24 mb-32 overflow-hidden">
-      <div class="flex whitespace-nowrap gap-12 opacity-10 pointer-events-none">
-        <span class="text-9xl font-black italic uppercase">DECONSTRUCT THE LIES</span>
-        <span class="text-9xl font-black italic uppercase">DECONSTRUCT THE LIES</span>
+    <div class="h-64 bg-surface-container-low dark:bg-[#1e1e1e] flex items-center px-6 md:px-12 lg:px-24 mb-32 overflow-hidden">
+      <div class="flex whitespace-nowrap gap-12 opacity-10 dark:opacity-5 pointer-events-none">
+        <span class="text-9xl font-black italic uppercase">1000 REASONS NOT TO VOTE APC</span>
+        <span class="text-9xl font-black italic uppercase">1000 REASONS NOT TO VOTE APC</span>
       </div>
     </div>
     <!-- Truth-Checks / Bento Grid Style Sections -->
     <section class="px-6 md:px-12 lg:px-24 mb-32">
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-px bg-outline-variant/20">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-px bg-outline-variant/20 dark:bg-white/10">
         <!-- Column 1 -->
-        <div class="md:col-span-4 bg-surface p-12 flex flex-col justify-between min-h-[400px]">
+        <div class="md:col-span-4 bg-surface dark:bg-[#1b1b1c] p-12 flex flex-col justify-between min-h-[400px]">
           <div>
-            <span class="text-[0.6875rem] font-bold uppercase tracking-[0.1em] text-primary">01 / FISCAL REALITY</span>
-            <h3 class="text-3xl font-bold mt-4 leading-tight">THE DEFICIT DECEPTION.</h3>
+            <span class="text-[0.6875rem] font-bold uppercase tracking-[0.1em] text-primary dark:text-[#95aafe]">01 / THE DATABASE</span>
+            <h3 class="text-3xl font-bold mt-4 leading-tight">1,000 DOCUMENTED FAILURES.</h3>
           </div>
-          <p class="text-sm leading-relaxed text-on-surface">
-            A critical analysis of the proposed economic expansion reveals a $4.2T gap currently being obscured by
-            temporary growth metrics. The foundation is unstable.
+          <p class="text-sm leading-relaxed text-on-surface dark:text-[#dcd9da]">
+            Spanning governance, economy, welfare, and security. Every claim is verified and backed by credible news sources. Data compiled by the original <a href="https://antiapc.com" target="_blank" class="underline hover:text-primary dark:hover:text-[#95aafe]">1000 Reasons</a> project.
           </p>
         </div>
         <!-- Column 2 -->
-        <div class="md:col-span-8 bg-surface-container-low p-12 flex flex-col justify-between min-h-[400px]">
+        <div class="md:col-span-8 bg-surface-container-low dark:bg-[#222224] p-12 flex flex-col justify-between min-h-[400px]">
           <div class="max-w-xl">
-            <span class="text-[0.6875rem] font-bold uppercase tracking-[0.1em] text-tertiary">02 / SOCIAL FABRIC</span>
-            <h3 class="text-4xl md:text-5xl font-extrabold mt-4 leading-none uppercase">ERODING THE CORE VALUES UNDER
-              THE GUISE OF PROGRESS.</h3>
+            <span class="text-[0.6875rem] font-bold uppercase tracking-[0.1em] text-tertiary dark:text-[#ffb4a1]">02 / THE REMINDER</span>
+            <h3 class="text-4xl md:text-5xl font-extrabold mt-4 leading-none uppercase">WE MAKE SURE YOU NEVER FORGET.</h3>
           </div>
           <div class="flex justify-end">
-            <span class="material-symbols-outlined text-6xl text-primary" data-icon="bolt">bolt</span>
+            <span class="material-symbols-outlined text-6xl text-primary dark:text-[#0052ff]" data-icon="mail">mail</span>
           </div>
         </div>
         <!-- Row 2 -->
-        <div class="md:col-span-7 bg-on-background p-12 text-surface min-h-[400px] flex flex-col justify-between">
+        <div class="md:col-span-7 bg-on-background dark:bg-[#e5e2e3] p-12 text-surface dark:text-[#1b1b1c] min-h-[400px] flex flex-col justify-between">
           <div>
-            <span class="text-[0.6875rem] font-bold uppercase tracking-[0.1em] text-primary-container">03 / POLICY
-              AUDIT</span>
-            <h3 class="text-3xl font-bold mt-4 leading-tight">SYSTEMIC OBSOLESENCE.</h3>
+            <span class="text-[0.6875rem] font-bold uppercase tracking-[0.1em] text-primary-container dark:text-[#003ec7]">03 / THE IMPACT</span>
+            <h3 class="text-3xl font-bold mt-4 leading-tight">FIGHT POLITICAL AMNESIA.</h3>
             <p class="mt-8 text-lg opacity-80 leading-relaxed max-w-lg">
-              The proposed legislation serves to automate inequality. By removing the safeguards of the previous
-              administration, we invite a structural collapse of middle-class security.
+              It is easy to get numb to the daily erosion of our living standards. By subscribing, you allow us to send you a random reason to reject the APC a few times a week to keep the reality fresh in your mind.
             </p>
           </div>
           <div class="mt-8">
-            <a class="inline-block border-2 border-surface px-8 py-4 font-bold text-xs uppercase tracking-widest hover:bg-surface hover:text-on-surface transition-colors"
-              href="#">
-              DOWNLOAD THE AUDIT
+            <a class="inline-block border-2 border-surface dark:border-[#1b1b1c] px-8 py-4 font-bold text-xs uppercase tracking-widest hover:bg-surface hover:text-on-surface dark:hover:bg-[#1b1b1c] dark:hover:text-[#e5e2e3] transition-colors"
+              href="https://antiapc.com" target="_blank" rel="noopener noreferrer">
+              VISIT ORIGINAL PROJECT
             </a>
           </div>
         </div>
         <div
-          class="md:col-span-5 bg-surface p-12 min-h-[400px] flex items-center justify-center relative overflow-hidden">
-          <div class="absolute inset-0 opacity-5 mix-blend-multiply"
+          class="md:col-span-5 bg-surface dark:bg-[#1b1b1c] p-12 min-h-[400px] flex items-center justify-center relative overflow-hidden">
+          <div class="absolute inset-0 opacity-5 dark:opacity-10 mix-blend-multiply dark:mix-blend-screen"
             style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuApSTYW8R_ICSuld6Sfg45X7kecU3xI_VT6eSQG9vE1fBVmt-VABJydfOGFJgfZW_OySEJ4GSKKWHplKAaIjJs_raeOx9wgnFUGb7eKlhpGuJDagzU1fODb0Tos1I8IWqyGuXmcZXdddLUskvc4A0v1_zuO5TZYOG36PmHWYAzcVAujNk0U6lZiHMJhb-gyVCsdkPUmwRZxdswxn-ikB0p9_uFDswTDGLm6TJdU5CVfQds_frFfTHiuzD0v1Lt_XtGOoxM1qknRPt9u');">
           </div>
           <div class="text-center">
-            <span class="text-9xl font-black text-outline/10 select-none">404</span>
-            <p class="font-bold uppercase tracking-widest mt-[-2rem] relative z-10 text-primary">TRUTH NOT FOUND IN
-              RECENT SPEECH</p>
+            <span class="text-9xl font-black text-outline/10 dark:text-white/5 select-none">1000</span>
+            <p class="font-bold uppercase tracking-widest mt-[-2rem] relative z-10 text-primary dark:text-[#95aafe]">VERIFIED REASONS ON RECORD</p>
           </div>
         </div>
       </div>
@@ -211,54 +256,62 @@
     <!-- Manifesto Statement -->
     <section class="px-6 md:px-12 lg:px-24 mb-32">
       <div class="max-w-4xl">
-        <h4 class="text-sm font-bold uppercase tracking-[0.3em] text-primary mb-12">THE MANIFESTO</h4>
+        <h4 class="text-sm font-bold uppercase tracking-[0.3em] text-primary dark:text-[#95aafe] mb-12">OUR PROMISE</h4>
         <div class="space-y-12">
           <p class="text-4xl md:text-5xl font-bold leading-tight">
-            We reject the aesthetic of populism.
+            We will never spam you.
           </p>
           <p class="text-4xl md:text-5xl font-bold leading-tight opacity-40">
-            We prioritize the structural integrity of truth.
+            We only send verified, documented facts.
           </p>
           <p class="text-4xl md:text-5xl font-bold leading-tight opacity-20">
-            We build resistance through architecture.
+            You can unsubscribe at any time.
           </p>
         </div>
       </div>
     </section>
   </main>
-  <!-- BottomNavBar -->
-  <nav
-    class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-stretch h-20 bg-[#fcf8f9] dark:bg-[#1b1b1c] z-50">
-    <a class="flex flex-col items-center justify-center text-[#003ec7] dark:text-[#ffffff] bg-[#003ec7] dark:bg-[#0052ff] text-white p-3 h-full flex-1"
-      href="#">
-      <span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
-      <span class="font-['Inter'] font-bold text-[11px] uppercase tracking-widest mt-1">MANIFESTO</span>
-    </a>
-    <a class="flex flex-col items-center justify-center text-[#1b1b1c] dark:text-[#fcf8f9] p-3 h-full flex-1 hover:bg-[#f6f3f4] dark:hover:bg-[#2a2a2c] transition-colors"
-      href="#">
-      <span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
-      <span class="font-['Inter'] font-bold text-[11px] uppercase tracking-widest mt-1">TRUTH-CHECK</span>
-    </a>
-    <a class="flex flex-col items-center justify-center text-[#1b1b1c] dark:text-[#fcf8f9] p-3 h-full flex-1 hover:bg-[#f6f3f4] dark:hover:bg-[#2a2a2c] transition-colors"
-      href="#">
-      <span class="material-symbols-outlined" data-icon="bolt">bolt</span>
-      <span class="font-['Inter'] font-bold text-[11px] uppercase tracking-widest mt-1">ACTION</span>
-    </a>
-    <a class="flex flex-col items-center justify-center text-[#1b1b1c] dark:text-[#fcf8f9] p-3 h-full flex-1 hover:bg-[#f6f3f4] dark:hover:bg-[#2a2a2c] transition-colors"
-      href="#">
-      <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
-      <span class="font-['Inter'] font-bold text-[11px] uppercase tracking-widest mt-1">ARCHIVE</span>
-    </a>
-  </nav>
-  <footer class="bg-on-background text-surface py-12 px-6 md:px-12 lg:px-24 mb-20 md:mb-0">
+  <footer class="bg-on-background dark:bg-black text-surface py-12 px-6 md:px-12 lg:px-24 mb-0 md:mb-0">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
       <div>
-        <h2 class="text-2xl font-black tracking-tighter uppercase mb-2">THE ANTI-APC CROONER</h2>
-        <p class="text-xs uppercase tracking-widest opacity-60">&copy; 2026 ANTI-APC PROPAGANDA PROJECT. ALL RIGHTS RESERVED.
-        </p>
+        <h2 class="text-2xl font-black tracking-tighter uppercase mb-2">UNOFFICIAL 1000 REASONS NEWSLETTER</h2>
+        <p class="text-xs uppercase tracking-widest opacity-60">This project is not affiliated with, endorsed by, or connected to the original 1000 Reasons project.</p>
       </div>
     </div>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('subscribe-form');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submit-btn');
+        const originalText = btn.textContent;
+        btn.textContent = 'WAIT...';
+        
+        try {
+          const res = await fetch('/register', {
+            method: 'POST',
+            body: new FormData(form)
+          });
+          if (res.ok) {
+            btn.textContent = 'SUBSCRIBED!';
+            form.reset();
+          } else {
+            btn.textContent = 'FAILED.';
+          }
+        } catch (err) {
+          btn.textContent = 'ERROR.';
+        }
+        
+        setTimeout(() => {
+          if (btn.textContent !== 'SUBSCRIBED!') {
+             btn.textContent = originalText;
+          }
+        }, 3000);
+      });
+    });
+  </script>
 </body>
 
 </html>

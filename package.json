@@ -9,12 +9,11 @@
   "dependencies": {
     "hono": "^4.12.11",
     "kysely": "^0.28.15",
-    "kysely-d1": "^0.4.0"
+    "kysely-d1": "^0.4.0",
+    "worker-mailer": "^1.2.1"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260405.1",
-    "@prisma/extension-accelerate": "^3.0.1",
-    "prisma": "^7.6.0",
     "wrangler": "^4.4.0"
   }
 }
