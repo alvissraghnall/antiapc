@@ -1,5 +1,4 @@
 -- Migration to create comprehensive reasons table
--- Run this in your Cloudflare D1 database
 
 CREATE TABLE IF NOT EXISTS reasons (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

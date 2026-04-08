@@ -7,8 +7,8 @@
     "directory": "public"
   },
   "dev": {
-    "host": "localhost",
-    "port": 9876,
+    // "host": "localhost",
+    "port": 9876, 
     // "local_protocol": "http",
   },
   // "compatibility_flags": [
@@ -29,12 +29,15 @@
   //     "bucket_name": "my-bucket"
   //   }
   // ],
+  "triggers": {
+    "crons": ["0 * * * *"]
+  },
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "antiapc",
       "database_id": "51e5da16-efe0-4e65-9a2d-6b92879329c8",
-      "migrations_dir": "migrations"
+      "migrations_dir": "migrations",
     }
   ],
   // "ai": {

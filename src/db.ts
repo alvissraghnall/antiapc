@@ -1,6 +1,6 @@
 import { D1Database } from '@cloudflare/workers-types';
 import { Hono } from 'hono';
-import { Kysely } from 'kysely';
+import { Kysely, Generated, Selectable, Updateable } from 'kysely';
 import { D1Dialect } from 'kysely-d1';
 
 export interface CloudflareBindings {
@@ -8,7 +8,7 @@ export interface CloudflareBindings {
 }
 
 interface ReasonsTable {
-  id: number;
+  id: Generated<number>;
   category: string;
   text: string;
   source: string;
@@ -16,11 +16,25 @@ interface ReasonsTable {
   region?: string;
   impact_level: 'high' | 'medium' | 'low';
   priority: number;
-  tags?: string; // JSON string of tags array
+  tags?: string | null; // JSON string of tags array
   verified: boolean;
   status: 'active' | 'archived' | 'pending';
-  created_at: string;
-  updated_at: string;
+  created_at: Generated<string>;
+  updated_at: Generated<string>;
+}
+
+export interface SubscribersTable {
+  id: Generated<number>;
+  email: string;
+  active: Generated<boolean>;
+  last_sent_at: string | null;
+  created_at: Generated<string>;
+}
+
+export interface SentEmailsTable {
+  subscriber_id: number;
+  reason_id: number;
+  sent_at: Generated<string>;
 }
 
 interface ReasonResponse {
@@ -52,11 +66,10 @@ interface ReasonCreateRequest {
   status?: 'active' | 'archived' | 'pending';
 }
 
-// Helper functions
-function dbToApi(reason: ReasonsTable): ReasonResponse {
+function dbToApi(reason: Selectable<ReasonsTable>): ReasonResponse {
   return {
     ...reason,
-    tags: reason.tags ? JSON.parse(reason.tags) : undefined
+    tags: reason.tags ? (JSON.parse(reason.tags) as string[]) : undefined
   };
 }
 
@@ -71,14 +84,10 @@ function apiToDb(reason: ReasonCreateRequest): Omit<ReasonsTable, 'id' | 'create
   };
 }
 
-interface KvTable {
-  key: string;
-  value: string;
-}
-
-interface Database {
+export interface Database {
   reasons: ReasonsTable;
-  kv: KvTable;
+  subscribers: SubscribersTable;
+  sent_emails: SentEmailsTable;
 }
 
 export type HonoEnv = {
@@ -88,67 +97,9 @@ export type HonoEnv = {
 export const createDbRouter = () => {
   const router = new Hono<HonoEnv>();
 
-  // GET /api/kv?key=foo
-  router.get('/api/kv', async (c) => {
-    const key = c.req.query('key');
-    if (!key) {
-      return c.text('Key is not defined.', 400);
-    }
-
-    const db = new Kysely<Database>({
-      dialect: new D1Dialect({ database: c.env.DB }),
-    });
-
-    const result = await db.selectFrom('kv').selectAll().where('key', '=', key).executeTakeFirst();
-    if (!result) {
-      return c.text('', 404);
-    }
-    return c.text(result.value);
-  });
-
-  // POST /api/kv with body { key, value }
-  router.post('/api/kv', async (c) => {
-    const body = await c.req.json();
-    const { key, value } = body;
-
-    if (!(key && value)) {
-      return c.text('Key and value must be defined.', 400);
-    }
-
-    const db = new Kysely<Database>({
-      dialect: new D1Dialect({ database: c.env.DB }),
-    });
-
-    try {
-      await db
-        .insertInto('kv')
-        .values([{ key, value }])
-        .onConflict((oc) => oc.column('key').doUpdateSet({ value }))
-        .execute();
-    } catch (err) {
-      throw err;
-    }
-    return c.text(value, 200);
-  });
-
-  // DELETE /api/kv?key=foo
-  router.delete('/api/kv', async (c) => {
-    const key = c.req.query('key');
-    if (!key) {
-      return c.text('Key is not defined.', 400);
-    }
-
-    const db = new Kysely<Database>({
-      dialect: new D1Dialect({ database: c.env.DB }),
-    });
-
-    await db.deleteFrom('kv').where('key', '=', key).execute();
-    return c.text('', 200);
-  });
-
   // Comprehensive Reasons API
-  // GET /api/reasons - List reasons with optional filtering
-  router.get('/api/reasons', async (c) => {
+  // GET /reasons - List reasons with optional filtering
+  router.get('/reasons', async (c) => {
     const db = new Kysely<Database>({
       dialect: new D1Dialect({ database: c.env.DB }),
     });
@@ -178,8 +129,8 @@ export const createDbRouter = () => {
     return c.json(results.map(dbToApi));
   });
 
-  // GET /api/reasons/:id - Get specific reason
-  router.get('/api/reasons/:id', async (c) => {
+  // GET /reasons/:id - Get specific reason
+  router.get('/reasons/:id', async (c) => {
     const id = parseInt(c.req.param('id'));
     if (isNaN(id)) {
       return c.text('Invalid ID', 400);
@@ -202,8 +153,8 @@ export const createDbRouter = () => {
     return c.json(dbToApi(result));
   });
 
-  // POST /api/reasons - Create new reason
-  router.post('/api/reasons', async (c) => {
+  // POST /reasons - Create new reason
+  router.post('/reasons', async (c) => {
     const body = await c.req.json() as ReasonCreateRequest;
     const {
       category,
@@ -238,7 +189,7 @@ export const createDbRouter = () => {
         region,
         impact_level,
         priority,
-        tags: tags ? JSON.stringify(tags) : [],
+        tags: tags ? JSON.stringify(tags) : null,
         verified,
         status,
         created_at: now,
@@ -250,8 +201,8 @@ export const createDbRouter = () => {
     return c.json({ id: result?.id, message: 'Reason created successfully' }, 201);
   });
 
-  // PUT /api/reasons/:id - Update reason
-  router.put('/api/reasons/:id', async (c) => {
+  // PUT /reasons/:id - Update reason
+  router.put('/reasons/:id', async (c) => {
     const id = parseInt(c.req.param('id'));
     if (isNaN(id)) {
       return c.text('Invalid ID', 400);
@@ -275,7 +226,7 @@ export const createDbRouter = () => {
       dialect: new D1Dialect({ database: c.env.DB }),
     });
 
-    const updateData: Partial<Omit<ReasonsTable, 'id' | 'created_at'>> = {
+    const updateData: Updateable<ReasonsTable> = {
       updated_at: new Date().toISOString()
     };
 
@@ -286,7 +237,7 @@ export const createDbRouter = () => {
     if (region !== undefined) updateData.region = region;
     if (impact_level !== undefined) updateData.impact_level = impact_level;
     if (priority !== undefined) updateData.priority = priority;
-    if (tags !== undefined) (updateData as any).tags = tags ? JSON.stringify(tags) : null;
+    if (tags !== undefined) updateData.tags = tags ? JSON.stringify(tags) : null;
     if (verified !== undefined) updateData.verified = verified;
     if (status !== undefined) updateData.status = status;
 
@@ -303,8 +254,8 @@ export const createDbRouter = () => {
     return c.json({ message: 'Reason updated successfully' });
   });
 
-  // DELETE /api/reasons/:id - Delete reason
-  router.delete('/api/reasons/:id', async (c) => {
+  // DELETE /reasons/:id - Delete reason
+  router.delete('/reasons/:id', async (c) => {
     const id = parseInt(c.req.param('id'));
     if (isNaN(id)) {
       return c.text('Invalid ID', 400);
