@@ -1,17 +1,6 @@
-import { D1Database } from '@cloudflare/workers-types';
 import { Hono } from 'hono';
 import { Kysely, Generated, Selectable, Updateable } from 'kysely';
 import { D1Dialect } from 'kysely-d1';
-
-export interface CloudflareBindings {
-  DB: D1Database;
-  SMTP_HOST?: string;
-  SMTP_PORT?: string;
-  SMTP_USER?: string;
-  SMTP_PASS?: string;
-  FROM_EMAIL?: string;
-  UNSUBSCRIBE_SECRET?: string;
-}
 
 interface ReasonsTable {
   id: Generated<number>;
@@ -116,7 +105,17 @@ export type HonoEnv = {
 export const createDbRouter = () => {
   const router = new Hono<HonoEnv>();
 
-  // Comprehensive Reasons API
+  // Protect mutating operations on /reasons endpoints
+  router.use('*', async (c, next) => {
+    if (c.req.path.startsWith('/reasons') && c.req.method !== 'GET') {
+      const secret = c.env.ADMIN_SECRET;
+      if (!secret) return c.text('Admin not configured properly.', 500);
+      const auth = c.req.header('Authorization');
+      if (auth !== `Bearer ${secret}`) return c.text('Unauthorized', 401);
+    }
+    await next();
+  });
+
   // GET /reasons - List reasons with optional filtering
   router.get('/reasons', async (c) => {
     const db = new Kysely<Database>({

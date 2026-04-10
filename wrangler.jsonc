@@ -8,13 +8,28 @@
   },
   "dev": {
     // "host": "localhost",
-    "port": 9876, 
+    "port": 9876,
     // "local_protocol": "http",
   },
   "compatibility_flags": [
     "nodejs_compat",
     "nodejs_compat_populate_process_env"
   ],
+  "env": {
+    "production": {
+      "name": "antiapc",
+      "route": "https://www.antiapc.xyz/*",
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "antiapc",
+          "database_id": "51e5da16-efe0-4e65-9a2d-6b92879329c8",
+          "migrations_dir": "migrations",
+        }
+      ],
+      
+    }
+  },
   // "vars": {
   //   "MY_VAR": "my-variable"
   // },
@@ -31,7 +46,9 @@
   //   }
   // ],
   "triggers": {
-    "crons": ["0 * * * *"]
+    "crons": [
+      "0 * * * *"
+    ]
   },
   "d1_databases": [
     {
@@ -41,6 +58,21 @@
       "migrations_dir": "migrations",
     }
   ],
+  "observability": {
+    "enabled": false,
+    "head_sampling_rate": 1,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "persist": true,
+      "invocation_logs": true
+    },
+    "traces": {
+      "enabled": false,
+      "persist": true,
+      "head_sampling_rate": 1
+    }
+  }
   // "ai": {
   //   "binding": "AI"
   // },

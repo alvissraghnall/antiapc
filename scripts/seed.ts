@@ -30,7 +30,10 @@ async function seedDatabase() {
     try {
       const res = await fetch('http://localhost:9876/reasons', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.ADMIN_SECRET || 'local_dev_secret'}`
+        },
         body: JSON.stringify({
           category: item.cat, // Map 'cat' from raw data to 'category'
           text: item.text,

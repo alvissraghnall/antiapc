@@ -1,11 +1,11 @@
 import { Kysely, sql } from 'kysely';
 import { D1Dialect } from 'kysely-d1';
-import { CloudflareBindings, Database, generateUnsubscribeToken } from './db';
+import { Database, generateUnsubscribeToken } from './db';
 import { WorkerMailer } from 'worker-mailer';
 
 function generateEmailHtml(reason: any, email: string, token: string) {
-  const sourceLink = reason.url && reason.url !== '#' 
-    ? `<a href="${reason.url}" style="color: #003ec7; text-decoration: underline; font-weight: bold;">${reason.source}</a>` 
+  const sourceLink = reason.url && reason.url !== '#'
+    ? `<a href="${reason.url}" style="color: #003ec7; text-decoration: underline; font-weight: bold;">${reason.source}</a>`
     : reason.source;
 
   return `
@@ -55,17 +55,20 @@ async function sendEmail(env: CloudflareBindings, to: string, subject: string, h
     return;
   }
 
-  const senderEmail = env.FROM_EMAIL || 'updates@antiapc.xyz';
+  const senderEmail = env.FROM_EMAIL || 'info@antiapc.xyz';
 
   try {
+
     await WorkerMailer.send({
       host: env.SMTP_HOST ?? "",
       port: parseInt(env.SMTP_PORT || '587', 10),
       credentials: {
-        username: env.SMTP_USER ?? "", 
+        username: env.SMTP_USER ?? "",
         password: env.SMTP_PASS ?? ""
       },
-      secure: env.SMTP_PORT !== '1025' // non-local SMTP requires secure connection
+      secure: env.SMTP_PORT === '465',// non-local SMTP requires secure connection
+      startTls: env.SMTP_PORT !== '465', // use STARTTLS for non-secure ports
+      authType: 'login'
     }, {
       from: senderEmail,
       to: to,
@@ -74,6 +77,7 @@ async function sendEmail(env: CloudflareBindings, to: string, subject: string, h
     });
   } catch (error) {
     console.error(`[SMTP ERROR] Failed to send email to ${to}:`, error);
+    throw error;
   }
 }
 
@@ -122,13 +126,27 @@ export async function processEmailBatch(env: CloudflareBindings) {
         if (!reason) return; // This user has seen everything!
 
         console.log(`[CRON] Sending Reason #${reason.id} to ${sub.email}`);
-        
+
         const token = await generateUnsubscribeToken(sub.email, env.UNSUBSCRIBE_SECRET || 'default_dev_secret');
         const html = generateEmailHtml(reason, sub.email, token);
-        await sendEmail(env, sub.email, `Anti-APC: Reason #${reason.id}`, html);
+        try {
+          await sendEmail(env, sub.email, `Anti-APC: Reason #${reason.id}`, html);
 
-        await db.insertInto('sent_emails').values({ subscriber_id: sub.id, reason_id: reason.id, sent_at: now }).execute();
-        await db.updateTable('subscribers').set({ last_sent_at: now }).where('id', '=', sub.id).execute();
+          // Insert log into sent_emails
+          await db.insertInto('sent_emails')
+            .values({ subscriber_id: sub.id, reason_id: reason.id, sent_at: now })
+            .execute();
+
+          // Update subscriber's last_sent_at
+          await db.updateTable('subscribers')
+            .set({ last_sent_at: now })
+            .where('id', '=', sub.id)
+            .execute();
+
+          console.log(`[CRON] Successfully sent Reason #${reason.id} to ${sub.email}`);
+        } catch (error) {
+          console.error(`[CRON ERROR] Failed to send email to ${sub.email}:`, error);
+        }
       })
     );
   }

@@ -6,7 +6,6 @@
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>1000 Reasons - Never Forget Why</title>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap"
     rel="stylesheet" />
   <link
@@ -15,75 +14,8 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
     rel="stylesheet" />
-  <script id="tailwind-config">
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          "colors": {
-            "on-background": "#1b1b1c",
-            "on-error-container": "#93000a",
-            "on-secondary": "#ffffff",
-            "on-primary": "#ffffff",
-            "on-surface-variant": "#434656",
-            "surface-container-highest": "#e5e2e3",
-            "outline": "#737688",
-            "inverse-surface": "#303031",
-            "surface-dim": "#dcd9da",
-            "secondary-fixed-dim": "#b7c4ff",
-            "on-tertiary": "#ffffff",
-            "secondary-fixed": "#dde1ff",
-            "surface-container-high": "#eae7e8",
-            "tertiary-container": "#bf3003",
-            "on-secondary-fixed": "#001452",
-            "on-primary-container": "#dfe3ff",
-            "on-tertiary-fixed": "#3c0800",
-            "surface-variant": "#e5e2e3",
-            "surface": "#fcf8f9",
-            "secondary": "#4459a8",
-            "on-primary-fixed-variant": "#0038b6",
-            "on-secondary-container": "#253b89",
-            "tertiary-fixed": "#ffdbd2",
-            "on-primary-fixed": "#001452",
-            "on-tertiary-container": "#ffddd5",
-            "on-tertiary-fixed-variant": "#891e00",
-            "secondary-container": "#95aafe",
-            "inverse-primary": "#b7c4ff",
-            "surface-container-lowest": "#ffffff",
-            "inverse-on-surface": "#f3f0f1",
-            "background": "#fcf8f9",
-            "surface-bright": "#fcf8f9",
-            "on-surface": "#1b1b1c",
-            "error-container": "#ffdad6",
-            "error": "#ba1a1a",
-            "primary-fixed-dim": "#b7c4ff",
-            "outline-variant": "#c3c5d9",
-            "surface-container": "#f0edee",
-            "primary-container": "#0052ff",
-            "primary": "#003ec7",
-            "surface-container-low": "#f6f3f4",
-            "tertiary": "#952200",
-            "on-error": "#ffffff",
-            "on-secondary-fixed-variant": "#2b418f",
-            "tertiary-fixed-dim": "#ffb4a1",
-            "surface-tint": "#004ced",
-            "primary-fixed": "#dde1ff"
-          },
-          "borderRadius": {
-            "DEFAULT": "0px",
-            "lg": "0px",
-            "xl": "0px",
-            "full": "9999px"
-          },
-          "fontFamily": {
-            "headline": ["Inter"],
-            "body": ["Inter"],
-            "label": ["Inter"]
-          }
-        },
-      },
-    }
-  </script>
+  <link rel="preconnect" href="https://challenges.cloudflare.com" />
+  <link href="/output.css" rel="stylesheet" />
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -147,6 +79,8 @@
       document.documentElement.classList.remove('dark');
     }
   </script>
+
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 
 <body
@@ -193,15 +127,21 @@
               informed.
             </span>
           </p>
-          <form id="subscribe-form" method="POST" action="/register"
-            class="flex flex-col md:flex-row gap-0 border-b-2 border-on-surface dark:border-[#dcd9da] focus-within:border-primary dark:focus-within:border-[#95aafe] transition-colors">
-            <input name="email" required
-              class="bg-transparent border-none focus:ring-0 w-full py-6 px-0 text-sm font-bold uppercase tracking-widest placeholder:text-outline dark:placeholder:text-[#737688] dark:text-[#fcf8f9]"
-              placeholder="ENTER YOUR EMAIL TO GET REMINDERS" type="email" />
-            <button type="submit" id="submit-btn"
-              class="bg-primary dark:bg-[#0052ff] text-on-primary px-12 py-6 font-bold uppercase tracking-widest hover:bg-primary-container dark:hover:bg-[#4459a8] active:scale-95 transition-all whitespace-nowrap">
-              SUBSCRIBE
-            </button>
+          <form id="subscribe-form" method="POST" action="/register" class="flex flex-col gap-4">
+            <div
+              class="flex flex-col md:flex-row gap-0 border-b-2 border-on-surface dark:border-[#dcd9da] focus-within:border-primary dark:focus-within:border-[#95aafe] transition-colors">
+              <input name="email" required
+                class="bg-transparent border-none focus:ring-0 w-full py-6 px-0 text-sm font-bold uppercase tracking-widest placeholder:text-outline dark:placeholder:text-[#737688] dark:text-[#fcf8f9]"
+                placeholder="ENTER YOUR EMAIL TO GET REMINDERS" type="email" />
+              <button type="submit" id="submit-btn"
+                class="bg-primary dark:bg-[#0052ff] text-on-primary px-12 py-6 font-bold uppercase tracking-widest hover:bg-primary-container dark:hover:bg-[#4459a8] active:scale-95 transition-all whitespace-nowrap">
+                SUBSCRIBE
+              </button>
+            </div>
+
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAC3BP_1h75k7ZwP4" data-theme="auto" data-size="flexible"
+              data-callback="onTurnstileSuccess" data-error-callback="onTurnstileError"
+              data-expired-callback="onTurnstileExpired"></div>
           </form>
           <div
             class="flex justify-center w-full mt-5 text-sm lg:text-base font-normal opacity-60 text-center text-on-surface dark:text-[#dcd9da]">
@@ -214,8 +154,10 @@
     <div
       class="h-64 bg-surface-container-low dark:bg-[#1e1e1e] flex items-center px-6 md:px-12 lg:px-24 mb-32 overflow-hidden">
       <div class="flex whitespace-nowrap gap-12 opacity-10 dark:opacity-5 pointer-events-none">
-        <span class="text-3xl md:text-5xl lg:text-7xl xl:text-9xl font-black italic uppercase">1000 REASONS NOT TO VOTE APC</span>
-        <span class="text-3xl md:text-5xl lg:text-7xl xl:text-9xl font-black italic uppercase">1000 REASONS NOT TO VOTE APC</span>
+        <span class="text-3xl md:text-5xl lg:text-7xl xl:text-9xl font-black italic uppercase">1000 REASONS NOT TO VOTE
+          APC</span>
+        <span class="text-3xl md:text-5xl lg:text-7xl xl:text-9xl font-black italic uppercase">1000 REASONS NOT TO VOTE
+          APC</span>
       </div>
     </div>
     <section class="px-6 md:px-12 lg:px-24 mb-32">
@@ -269,7 +211,8 @@
         </div>
         <div
           class="md:col-span-5 bg-surface dark:bg-[#1b1b1c] p-12 min-h-[400px] flex items-center justify-center relative overflow-hidden">
-          <div class="absolute inset-0 opacity-5 dark:opacity-10 mix-blend-multiply dark:mix-blend-screen bg-gradient-to-r from-[#FD8112] to-[#0085CA]">
+          <div
+            class="absolute inset-0 opacity-5 dark:opacity-10 mix-blend-multiply dark:mix-blend-screen bg-gradient-to-r from-[#FD8112] to-[#0085CA]">
           </div>
           <div class="text-center">
             <span class="text-9xl font-black text-outline/10 dark:text-white/5 select-none">1000</span>
@@ -334,6 +277,9 @@
           errorMessage.textContent = 'An error occurred while subscribing.';
         }
 
+        // Reset Turnstile token for subsequent attempts
+        if (window.turnstile) turnstile.reset();
+
         setTimeout(() => {
           if (btn.textContent !== 'SUBSCRIBED!') {
             btn.textContent = originalText;
@@ -341,6 +287,22 @@
         }, 3000);
       });
     });
+
+    function onTurnstileSuccess(token) {
+      // console.log("Turnstile success:", token);
+      document.getElementById("submit-btn").disabled = false;
+      document.getElementById('error-message').textContent = '';
+    }
+    function onTurnstileError(errorCode) {
+      console.error("Turnstile error:", errorCode);
+      document.getElementById("submit-btn").disabled = true;
+      document.getElementById('error-message').textContent = 'CAPTCHA verification failed. Please try again.';
+    }
+    function onTurnstileExpired() {
+      console.warn("Turnstile token expired");
+      document.getElementById("submit-btn").disabled = true;
+      document.getElementById('error-message').textContent = 'CAPTCHA token expired. Please complete the CAPTCHA again.';
+    }
   </script>
 </body>
 
