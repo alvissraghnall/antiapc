@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { logger } from 'hono/logger'
-import { CloudflareBindings, createDbRouter, HonoEnv, Database, generateUnsubscribeToken } from './db'
+import { createDbRouter, HonoEnv, Database, generateUnsubscribeToken } from './db'
 import { processEmailBatch } from './cron'
 import { Kysely } from 'kysely'
 import { D1Dialect } from 'kysely-d1'
@@ -24,6 +24,7 @@ app.get('/', async (c) => {
 
 app.post('/register', async (c) => {
   const body = await c.req.parseBody();
+  console.log("Received registration request:", body);
 
   // Verify Turnstile CAPTCHA token (covers standard form or custom JSON payload)
   const token = (body['cf-turnstile-response'] || body['turnstileToken']) as string;

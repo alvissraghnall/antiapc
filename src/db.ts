@@ -1,19 +1,6 @@
-import { D1Database } from '@cloudflare/workers-types';
 import { Hono } from 'hono';
 import { Kysely, Generated, Selectable, Updateable } from 'kysely';
 import { D1Dialect } from 'kysely-d1';
-
-export interface CloudflareBindings {
-  DB: D1Database;
-  SMTP_HOST?: string;
-  SMTP_PORT?: string;
-  SMTP_USER?: string;
-  SMTP_PASS?: string;
-  FROM_EMAIL?: string;
-  UNSUBSCRIBE_SECRET?: string;
-  TURNSTILE_SECRET_KEY?: string;
-  ADMIN_SECRET?: string;
-}
 
 interface ReasonsTable {
   id: Generated<number>;

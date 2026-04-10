@@ -8,18 +8,26 @@
   },
   "dev": {
     // "host": "localhost",
-    "port": 9876, 
+    "port": 9876,
     // "local_protocol": "http",
   },
   "compatibility_flags": [
     "nodejs_compat",
     "nodejs_compat_populate_process_env"
   ],
-  "workers_dev": true, // still use workers.dev for dev
   "env": {
     "production": {
       "name": "antiapc",
       "route": "https://www.antiapc.xyz/*",
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "antiapc",
+          "database_id": "51e5da16-efe0-4e65-9a2d-6b92879329c8",
+          "migrations_dir": "migrations",
+        }
+      ],
+      
     }
   },
   // "vars": {
@@ -38,7 +46,9 @@
   //   }
   // ],
   "triggers": {
-    "crons": ["0 * * * *"]
+    "crons": [
+      "0 * * * *"
+    ]
   },
   "d1_databases": [
     {
@@ -48,7 +58,7 @@
       "migrations_dir": "migrations",
     }
   ],
-    "observability": {
+  "observability": {
     "enabled": false,
     "head_sampling_rate": 1,
     "logs": {
