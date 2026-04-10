@@ -11,6 +11,8 @@ export interface CloudflareBindings {
   SMTP_PASS?: string;
   FROM_EMAIL?: string;
   UNSUBSCRIBE_SECRET?: string;
+  TURNSTILE_SECRET_KEY?: string;
+  ADMIN_SECRET?: string;
 }
 
 interface ReasonsTable {
@@ -116,7 +118,17 @@ export type HonoEnv = {
 export const createDbRouter = () => {
   const router = new Hono<HonoEnv>();
 
-  // Comprehensive Reasons API
+  // Protect mutating operations on /reasons endpoints
+  router.use('*', async (c, next) => {
+    if (c.req.path.startsWith('/reasons') && c.req.method !== 'GET') {
+      const secret = c.env.ADMIN_SECRET;
+      if (!secret) return c.text('Admin not configured properly.', 500);
+      const auth = c.req.header('Authorization');
+      if (auth !== `Bearer ${secret}`) return c.text('Unauthorized', 401);
+    }
+    await next();
+  });
+
   // GET /reasons - List reasons with optional filtering
   router.get('/reasons', async (c) => {
     const db = new Kysely<Database>({

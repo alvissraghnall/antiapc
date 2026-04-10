@@ -15,6 +15,13 @@
     "nodejs_compat",
     "nodejs_compat_populate_process_env"
   ],
+  "workers_dev": true, // still use workers.dev for dev
+  "env": {
+    "production": {
+      "name": "antiapc",
+      "route": "https://www.antiapc.xyz/*",
+    }
+  },
   // "vars": {
   //   "MY_VAR": "my-variable"
   // },
@@ -41,6 +48,21 @@
       "migrations_dir": "migrations",
     }
   ],
+    "observability": {
+    "enabled": false,
+    "head_sampling_rate": 1,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "persist": true,
+      "invocation_logs": true
+    },
+    "traces": {
+      "enabled": false,
+      "persist": true,
+      "head_sampling_rate": 1
+    }
+  }
   // "ai": {
   //   "binding": "AI"
   // },
